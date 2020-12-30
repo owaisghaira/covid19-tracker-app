@@ -1,10 +1,9 @@
 import React, { useState, useEffect } from 'react'
 import { dailyFecthData } from '../../api'
 import { Line, Bar } from 'react-chartjs-2'
-import { StylesProvider } from '@material-ui/core'
 import styles from './charts.module.css'
 
-function Charts() {
+function Charts({ data, country }) {
     const [dailyData, setDailyData] = useState([])
 
     useEffect(() => {
@@ -13,8 +12,7 @@ function Charts() {
         }
         fetchapi()
         // console.log(dailyData)
-    },[])
-
+    }, [])
     const linechart = (
         dailyData.length
             ?
@@ -23,12 +21,12 @@ function Charts() {
                     labels: dailyData.map(({ date }) => date),
                     datasets: [{
                         data: dailyData.map(({ confirmed }) => confirmed),
-                        labels: 'Infected',
+                        label: 'Infected',
                         borderColor: '#3333ff',
                         fill: true
                     }, {
                         data: dailyData.map(({ deaths }) => deaths),
-                        labels: 'Deaths',
+                        label: 'Deaths',
                         borderColor: 'red',
                         backgroundColor: 'rgba(255,0,0,0.5)',
                         fill: true
@@ -37,10 +35,36 @@ function Charts() {
             />)
             : null
     )
+    // console.log(data.confirmed.value, data.recovered.value, data.deaths.value)
+
+    const barChart = (
+        data.confirmed
+            ? (
+                <Bar
+                    data={{
+                        labels: ['Infected', 'Recovered', 'Deaths'],
+                        datasets: [{
+                            label: 'People',
+                            backgroundColor: [
+                                'rgba(0,0,255,0.5)',
+                                'rgba(0,255,0,0.5)',
+                                'rgba(255,0,0,0.5)',
+                            ],
+                            data: [data.confirmed.value, data.recovered.value, data.deaths.value]
+                        }]
+                    }}
+                    options={{
+                        legend: { display: false },
+                        title: { display: true, text: `Current state in ${country}` },
+                    }}
+                />
+            )
+            : null
+    )
     return (
 
         <div className={styles.container}>
-            {linechart}
+            {country ? barChart : linechart}
         </div>
     );
 }
