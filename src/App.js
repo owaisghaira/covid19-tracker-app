@@ -1,5 +1,6 @@
 import React from 'react'
 import { Cards, Charts, CountryPicker } from './components'
+import NavBar from '../src/components/Header/NavBar'
 import styles from './App.module.css'
 import { fetchData } from "./api/index";
 import coronaImg from "./images/image.png";
@@ -23,12 +24,15 @@ class App extends React.Component {
   render() {
     const { data, country } = this.state;
     return (
+      <>
+      <NavBar />
       <div className={styles.container}>
         <img className={styles.image} src={coronaImg}/>
         <Cards data={data} />
         <CountryPicker handleCountryChange={this.handleCountryChange} />
         <Charts data={data} country={country} />
       </div>
+      </>
     );
   }
 }
